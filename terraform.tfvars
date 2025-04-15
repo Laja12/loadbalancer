@@ -1,10 +1,8 @@
-aws_region      = "ap-southeast-2"
+aws_region      = "us-east-1"
 vpc_cidr       = "10.0.0.0/16"
 subnet_cidr_1  = "10.0.1.0/24"
-subnet_cidr_2  = "10.0.2.0/24"
-subnet_cidr_3  = "10.0.3.0/24"
-az_1           = "ap-southeast-2a"
-az_2           = "ap-southeast-2b"
-az_3           = "ap-southeast-2c"
-ami_id         = "ami-0013d898808600c4a"
-instance_type  = "t2.micro"
+
+az_1           = "us-east-1a"
+
+ami_id         = "ami-00a929b66ed6e0de6"
+instance_type  = "t2.xlarge"
