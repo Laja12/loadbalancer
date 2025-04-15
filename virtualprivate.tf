@@ -19,27 +19,6 @@ resource "aws_subnet" "public_subnet_1" {
   }
 }
 
-resource "aws_subnet" "public_subnet_2" {
-  vpc_id                  = aws_vpc.main_vpc.id
-  cidr_block              = var.subnet_cidr_2
-  map_public_ip_on_launch = true
-  availability_zone       = var.az_2
-
-  tags = {
-    Name = "PublicSubnet-2"
-  }
-}
-
-resource "aws_subnet" "public_subnet_3" {
-  vpc_id                  = aws_vpc.main_vpc.id
-  cidr_block              = var.subnet_cidr_3
-  map_public_ip_on_launch = true
-  availability_zone       = var.az_3
-
-  tags = {
-    Name = "PublicSubnet-3"
-  }
-}
 
 # Create Internet Gateway
 resource "aws_internet_gateway" "main_igw" {
@@ -70,12 +49,3 @@ resource "aws_route_table_association" "subnet_1_assoc" {
   route_table_id = aws_route_table.public_rt.id
 }
 
-resource "aws_route_table_association" "subnet_2_assoc" {
-  subnet_id      = aws_subnet.public_subnet_2.id
-  route_table_id = aws_route_table.public_rt.id
-}
-
-resource "aws_route_table_association" "subnet_3_assoc" {
-  subnet_id      = aws_subnet.public_subnet_3.id
-  route_table_id = aws_route_table.public_rt.id
-}
