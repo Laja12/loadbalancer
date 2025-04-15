@@ -4,100 +4,22 @@ resource "aws_instance" "web_1" {
   subnet_id     = aws_subnet.public_subnet_1.id
   security_groups = [aws_security_group.ec2_sg.id]
 
-  user_data = <<-EOF
+   user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
-              sudo amazon-linux-extras enable nginx1
-              sudo yum install -y nginx
+              sudo yum install docker -y
+              sudo systemctl restart docker
+              sudo systemctl enable docker
+              sudo usermod -aG docker ec2-user
+              
 
-              echo '<html>
-              <head><title>Home</title></head>
-              <body>
-              <h1>Home page is ready Mahesh!</h1>
-              </body>
-              </html>' | sudo tee /usr/share/nginx/html/index.html > /dev/null
+              docker run -d -p 8080:80 \
+               -e OPENPROJECT_SECRET_KEY_BASE=someSecretKey \
+               -e OPENPROJECT_HTTPS=false \
+               openproject/openproject:15
 
-              sudo systemctl restart nginx
-              sudo systemctl enable nginx
 EOF
 
   tags = { Name = "WebServer-Home" }
 }
 
-resource "aws_instance" "web_2" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
-  subnet_id     = aws_subnet.public_subnet_2.id
-  security_groups = [aws_security_group.ec2_sg.id]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo amazon-linux-extras enable nginx1
-              sudo yum install -y nginx
-              
-              sudo mkdir -p /usr/share/nginx/html/images
-
-              echo '<html>
-              <head><title>Images</title></head>
-              <body>
-              <h1>Imagesg page is ready Mahesh!</h1>
-              </body>
-              </html>' | sudo tee /usr/share/nginx/html/images/index.html > /dev/null
-
-              # Configure Nginx for /images
-              sudo tee /etc/nginx/conf.d/images.conf > /dev/null <<EOT
-              server {
-                  listen 80;
-                  location /images {
-                      root /usr/share/nginx/html;
-                      index index.html;
-                  }
-              }
-              EOT
-
-              sudo systemctl restart nginx
-              sudo systemctl enable nginx
-EOF
-
-  tags = { Name = "WebServer-Images" }
-}
-
-resource "aws_instance" "web_3" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
-  subnet_id     = aws_subnet.public_subnet_3.id
-  security_groups = [aws_security_group.ec2_sg.id]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum update -y
-              sudo amazon-linux-extras enable nginx1
-              sudo yum install -y nginx
-              
-              sudo mkdir -p /usr/share/nginx/html/register
-
-              echo '<html>
-              <head><title>Register</title></head>
-              <body>
-              <h1>Register page is ready Mahesh!</h1>
-              </body>
-              </html>' | sudo tee /usr/share/nginx/html/register/index.html > /dev/null
-
-              # Configure Nginx for /register
-              sudo tee /etc/nginx/conf.d/register.conf > /dev/null <<EOT
-              server {
-                  listen 80;
-                  location /register {
-                      root /usr/share/nginx/html;
-                      index index.html;
-                  }
-              }
-              EOT
-
-              sudo systemctl restart nginx
-              sudo systemctl enable nginx
-EOF
-
-  tags = { Name = "WebServer-Register" }
-}
