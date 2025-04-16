@@ -1,4 +1,4 @@
-name: open-project
+name: load-balancer
 
 on:
   workflow_dispatch:
